@@ -1,4 +1,4 @@
-from database import db
+from .database import db
 
 class Player(db.Model):
     """Represents a soccer player with their positions and preferred foot."""

@@ -18,7 +18,7 @@ function MyForm() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const newErrors = {};
 
@@ -28,10 +28,26 @@ function MyForm() {
 
         if (Object.keys(newErrors).length === 0) {
             console.log('Form is valid');
+            try {
+                const response = await fetch('http://localhost:5000/call-api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('API call successful:', result);
+                } else {
+                    console.error('API call failed:', response.status, response.statusText);
+                }
+            } catch (error) {
+                console.error('Network or server error :', error);
+            }
         } else {
             setErrors(newErrors);
         }
-        // Here you can add code to send formData to your backend or perform other actions
     };
 
     return (
