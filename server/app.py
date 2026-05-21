@@ -20,10 +20,10 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 @app.route('/')
 def index():
-    return "Hello, this is a Flask microservice!"
+    return "Welcome to the Player Input Service!"
 
-@app.route('/call-api', methods=['POST'])
-def call_api():
+@app.route('/player', methods=['POST'])
+def create_player():
     
     # Check if Content-Type is application/json
     if not request.is_json:
@@ -35,11 +35,15 @@ def call_api():
         return jsonify({"error": "No data provided"}), 400
     
     name = data.get('name')
-    preferredFoot = data.get('preferredFoot')
+    age = data.get('age')
+    leftRating = data.get('leftRating')
+    rightRating = data.get('rightRating')
     primaryPosition = data.get('primaryPosition')
+    secondaryPosition = data.get('secondaryPosition')
+    available = data.get('available')
 
-    print(f"Received: {name}, {preferredFoot}, {primaryPosition}")
-    
+    print(f"Received: {name}, {age}, {leftRating}, {rightRating}, {primaryPosition}, {secondaryPosition}, {available}")
+
     # Import the Player model
     from db.models import Player
     
@@ -47,8 +51,12 @@ def call_api():
         # Create a new player instance
         new_player = Player(
             name=name,
-            preferredFoot=preferredFoot,
-            primaryPosition=primaryPosition
+            age=age,
+            leftRating=leftRating,
+            rightRating=rightRating,
+            primaryPosition=primaryPosition,
+            secondaryPosition=secondaryPosition,
+            available=available
         )
         
         # Add and commit to the database
@@ -59,6 +67,25 @@ def call_api():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
+
+@app.route('/players', methods=['GET'])
+def get_players():
+    from db.models import Player
+    players = Player.query.all()
+    player_list = []
+    for player in players:
+        player_info = {
+            "name": player.name,
+            "age": player.age,
+            "leftRating": player.leftRating,
+            "rightRating": player.rightRating,
+            "primaryPosition": player.primaryPosition,
+            "secondaryPosition": player.secondaryPosition,
+            "available": player.available
+        }
+        player_list.append(player_info)
+    
+    return jsonify(player_list), 200
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

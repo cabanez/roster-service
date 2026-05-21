@@ -1,4 +1,5 @@
 import MyForm from './Form';
+import MyData from './Data';
 
 function App() {
 
@@ -8,6 +9,12 @@ function App() {
         <div>
           <h1>Player Input Form</h1>
           <MyForm />
+        </div>
+      </section>
+      <section id="data">
+        <div>
+          <h1>Player Table</h1>
+          <MyData />
         </div>
       </section>
     </>

@@ -3,9 +3,12 @@ import React, { useState } from 'react';
 function MyForm() {
     const [formData, setFormData] = useState({
         name: '',
-        preferredFoot: '',
+        age: '',
+        leftRating: '',
+        rightRating: '',
         primaryPosition: '',
-        secondaryPosition: ''
+        secondaryPosition: '',
+        available: ''
     });
 
     const [errors, setErrors] = useState({});
@@ -23,13 +26,16 @@ function MyForm() {
         const newErrors = {};
 
         if (!formData.name) newErrors.name = 'Name is required';
-        if (!formData.preferredFoot) newErrors.preferredFoot = 'Preferred Foot is required';
+        if (!formData.age) newErrors.age = 'Age is required';
+        if (!formData.leftRating) newErrors.leftRating = 'Left Rating is required';
+        if (!formData.rightRating) newErrors.rightRating = 'Right Rating is required';
         if (!formData.primaryPosition) newErrors.primaryPosition = 'Primary Position is required';
+        if (!formData.available) newErrors.available = 'Availability is required';
 
         if (Object.keys(newErrors).length === 0) {
             console.log('Form is valid');
             try {
-                const response = await fetch('http://localhost:5000/call-api', {
+                const response = await fetch('http://localhost:5000/player', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -57,13 +63,16 @@ function MyForm() {
                 <input type="text" name="name" value={formData.name} onChange={handleChange} required />
             </div>
             <div>
-                <label>Preferred Foot:</label>
-                <select name="preferredFoot" value={formData.preferredFoot} onChange={handleChange} required>
-                    <option value="">Select Preferred Foot</option>
-                    <option value="left">Left</option>
-                    <option value="right">Right</option>
-                    <option value="both">Both</option>
-                </select>
+                <label>Age:</label>
+                <input type="number" name="age" value={formData.age} onChange={handleChange} required />
+            </div>
+            <div>
+                <label>Left Rating:</label>
+                <input type="number" name="leftRating" value={formData.leftRating} onChange={handleChange} required />
+            </div>
+            <div>
+                <label>Right Rating:</label>
+                <input type="number" name="rightRating" value={formData.rightRating} onChange={handleChange} required />
             </div>
             <div>
                 <label>Primary Position:</label>
@@ -104,6 +113,10 @@ function MyForm() {
                     <option value="AMR">Right Winger</option>
                     <option value="ST">Striker</option>
                 </select>
+            </div>
+            <div>
+                <label>Available:</label>
+                <input type="checkbox" name="available" checked={formData.available} onChange={handleChange} required />
             </div>
             <button type="submit">Submit</button>
         </form>
