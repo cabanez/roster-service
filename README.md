@@ -64,3 +64,21 @@ To contribute or extend functionality:
 ## Contact
 
 [Add contact information or maintainer details]
+
+## Docker
+
+Build the image from the `roster-input-service` root:
+
+```bash
+docker build -t roster-input-service:latest .
+```
+
+Run the container and map the API port:
+
+```bash
+docker run -p 5000:5000 roster-input-service:latest
+```
+
+Notes:
+- The Flask app listens on port `5000` (see `server/app.py`).
+- If your `requirements.txt` includes packages that need system libraries, the `Dockerfile` installs basic build tools.
