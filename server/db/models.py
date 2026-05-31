@@ -9,7 +9,7 @@ class Player(db.Model):
     __tablename__ = 'players'
     id = Column(Integer, primary_key=True)
     name = Column(String(64), unique=True, nullable=False)  # Keep name unique
-    team = db.Column(String(64), unique=False, nullable=False)
+    team = db.Column(Integer, ForeignKey('teams.id'), unique=False, nullable=False)
     age = db.Column(Integer, unique=False, nullable=False)
     leftRating = db.Column(Integer, unique=False, nullable=False)
     rightRating = db.Column(Integer, unique=False, nullable=False)

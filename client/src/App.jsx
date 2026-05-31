@@ -5,6 +5,17 @@ import MyData from './Data';
 function App() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [refreshFlag, setRefreshFlag] = useState(0);
+  const [expandedSections, setExpandedSections] = useState({
+    form: true,
+    data: true
+  });
+
+  const toggleSection = (section) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   const handleEditPlayer = async (playerId) => {
     if (!playerId) {
@@ -32,17 +43,31 @@ function App() {
 
   return (
     <>
-      <section id="form">
-        <div>
+      <section id="form" className={`collapsible-section ${expandedSections.form ? 'expanded' : 'collapsed'}`}>
+        <div className="section-header" onClick={() => toggleSection('form')}>
           <h3>Player Input Form</h3>
-          <MyForm initialData={selectedPlayer} onSaved={handleFormSaved} />
+          <button type="button" className="toggle-btn" aria-expanded={expandedSections.form}>
+            {expandedSections.form ? '▼' : '▶'}
+          </button>
         </div>
+        {expandedSections.form && (
+          <div className="section-content">
+            <MyForm initialData={selectedPlayer} onSaved={handleFormSaved} />
+          </div>
+        )}
       </section>
-      <section id="data">
-        <div>
+      <section id="data" className={`collapsible-section ${expandedSections.data ? 'expanded' : 'collapsed'}`}>
+        <div className="section-header" onClick={() => toggleSection('data')}>
           <h3>Player Data</h3>
-          <MyData onEdit={handleEditPlayer} refreshFlag={refreshFlag} />
+          <button type="button" className="toggle-btn" aria-expanded={expandedSections.data}>
+            {expandedSections.data ? '▼' : '▶'}
+          </button>
         </div>
+        {expandedSections.data && (
+          <div className="section-content">
+            <MyData onEdit={handleEditPlayer} refreshFlag={refreshFlag} />
+          </div>
+        )}
       </section>
     </>
   );
