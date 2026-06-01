@@ -1,4 +1,4 @@
-# Roster Input Service
+# Roster Service
 
 An API for user facing inputs.
 
@@ -67,16 +67,16 @@ To contribute or extend functionality:
 
 ## Docker
 
-Build the image from the `roster-input-service` root:
+Build the image from the `roster-service` root:
 
 ```bash
-docker build -t roster-input-service:latest .
+docker build -t roster-service:latest .
 ```
 
 Run the container and map the API port:
 
 ```bash
-docker run -p 5000:5000 roster-input-service:latest
+docker run -p 5000:5000 roster-service:latest
 ```
 
 Notes:
