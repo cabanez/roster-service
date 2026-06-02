@@ -9,6 +9,9 @@ function MyForm({ initialData, onSaved }) {
         rightRating: '',
         primaryPosition: '',
         secondaryPosition: '',
+        technicalRating: '',
+        mentalRating: '',
+        physicalRating: '',
         available: true // Default to true, can be changed based on your requirements
     });
 
@@ -42,6 +45,9 @@ function MyForm({ initialData, onSaved }) {
             rightRating: initialData.rightRating || '',
             primaryPosition: initialData.primaryPosition || '',
             secondaryPosition: initialData.secondaryPosition || '',
+            technicalRating: initialData.technicalRating || '',
+            mentalRating: initialData.mentalRating || '',
+            physicalRating: initialData.physicalRating || '',
             available: initialData.available ?? true
         };
 
@@ -70,6 +76,9 @@ function MyForm({ initialData, onSaved }) {
         if (!formData.age) newErrors.age = 'Age is required';
         if (!formData.leftRating) newErrors.leftRating = 'Left Rating is required';
         if (!formData.rightRating) newErrors.rightRating = 'Right Rating is required';
+        if (!formData.technicalRating) newErrors.technicalRating = 'Technical Rating is required';
+        if (!formData.mentalRating) newErrors.mentalRating = 'Mental Rating is required';
+        if (!formData.physicalRating) newErrors.physicalRating = 'Physical Rating is required';
         if (!formData.primaryPosition) newErrors.primaryPosition = 'Primary Position is required';
 
         if (Object.keys(newErrors).length === 0) {
@@ -98,6 +107,9 @@ function MyForm({ initialData, onSaved }) {
                         rightRating: '',
                         primaryPosition: '',
                         secondaryPosition: '',
+                        technicalRating: '',
+                        mentalRating: '',
+                        physicalRating: '',
                         available: true
                     });
                     setEditingId(null);
@@ -134,8 +146,6 @@ function MyForm({ initialData, onSaved }) {
                     </select>
                     {errors.team && <div className="field-error">{errors.team}</div>}
                 </div>
-            </div>
-            <div>
                 <label>Age:</label>
                 <div style={{ flex: 1 }}>
                     <input type="number" name="age" value={formData.age} onChange={handleChange} required />
@@ -145,22 +155,34 @@ function MyForm({ initialData, onSaved }) {
             <div>
                 <label>Left Rating:</label>
                 <div style={{ flex: 1 }}>
-                    <input type="number" name="leftRating" value={formData.leftRating} onChange={handleChange} required />
+                    <select name="leftRating" value={formData.leftRating} onChange={handleChange} required>
+                        <option value="">Select Left Rating</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
                     {errors.leftRating && <div className="field-error">{errors.leftRating}</div>}
                 </div>
-            </div>
-            <div>
                 <label>Right Rating:</label>
                 <div style={{ flex: 1 }}>
-                    <input type="number" name="rightRating" value={formData.rightRating} onChange={handleChange} required />
+                    <select name="rightRating" value={formData.rightRating} onChange={handleChange} required>
+                        <option value="">Select Right Rating</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
                     {errors.rightRating && <div className="field-error">{errors.rightRating}</div>}
                 </div>
             </div>
             <div>
-                <label>Primary Position:</label>
+                <label>Primary Role:</label>
                 <div style={{ flex: 1 }}>
                     <select name="primaryPosition" value={formData.primaryPosition} onChange={handleChange} required>
-                        <option value="">Select Primary Position</option>
+                        <option value="">Select Primary Role</option>
                         <option value="GK">Goalkeeper</option>
                         <option value="DC">Center-back</option>
                         <option value="DR">Right-back</option>
@@ -178,12 +200,10 @@ function MyForm({ initialData, onSaved }) {
                     </select>
                     {errors.primaryPosition && <div className="field-error">{errors.primaryPosition}</div>}
                 </div>
-            </div>
-            <div>
-                <label>Secondary Position:</label>
+                <label>Secondary Role:</label>
                 <div style={{ flex: 1 }}>
                     <select name="secondaryPosition" value={formData.secondaryPosition} onChange={handleChange}>
-                        <option value="">Select Secondary Position</option>
+                        <option value="">Select Secondary Role</option>
                         <option value="GK">Goalkeeper</option>
                         <option value="DC">Center-back</option>
                         <option value="DR">Right-back</option>
@@ -201,7 +221,45 @@ function MyForm({ initialData, onSaved }) {
                     </select>
                 </div>
             </div>
+            <div>
+                <label>Technical Rating:</label>
+                <div style={{ flex: 1 }}>
+                    <select name="technicalRating" value={formData.technicalRating} onChange={handleChange} required>
+                        <option value="">Select Technical Rating</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    {errors.technicalRating && <div className="field-error">{errors.technicalRating}</div>}
+                </div>
+                <label>Mental Rating:</label>
+                <div style={{ flex: 1 }}>
+                    <select name="mentalRating" value={formData.mentalRating} onChange={handleChange} required>
+                        <option value="">Select Mental Rating</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    {errors.mentalRating && <div className="field-error">{errors.mentalRating}</div>}
+                </div>
+            </div>
             <div className="toggle-row">
+                <label>Physical Rating:</label>
+                <div style={{ flex: 1 }}>
+                    <select name="physicalRating" value={formData.physicalRating} onChange={handleChange} required>
+                        <option value="">Select Physical Rating</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    {errors.physicalRating && <div className="field-error">{errors.physicalRating}</div>}
+                </div>
                 <label htmlFor="available">Available:</label>
                 <label className="switch">
                     <input

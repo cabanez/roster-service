@@ -77,8 +77,11 @@ function MyData({ onEdit, refreshFlag }) {
             <th>Age</th>
             <th>Left Rating</th>
             <th>Right Rating</th>
-            <th>Primary Position</th>
-            <th>Secondary Position</th>
+            <th>Primary Role</th>
+            <th>Secondary Role</th>
+            <th>Technical Rating</th>
+            <th>Mental Rating</th>
+            <th>Physical Rating</th>
             <th>Available</th>
           </tr>
         </thead>
@@ -97,6 +100,9 @@ function MyData({ onEdit, refreshFlag }) {
               <td>{player.rightRating}</td>
               <td>{player.primaryPosition}</td>
               <td>{player.secondaryPosition}</td>
+              <td>{player.technicalRating}</td>
+              <td>{player.mentalRating}</td>
+              <td>{player.physicalRating}</td>
               <td>{player.available ? 'Yes' : 'No'}</td>
             </tr>
           ))}

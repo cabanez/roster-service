@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import MyForm from './Form';
 import MyData from './Data';
+import MyReports from './Reports';
 
 function App() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
@@ -66,6 +67,19 @@ function App() {
         {expandedSections.data && (
           <div className="section-content">
             <MyData onEdit={handleEditPlayer} refreshFlag={refreshFlag} />
+          </div>
+        )}
+      </section>
+      <section id="reports" className={`collapsible-section ${expandedSections.reports ? 'expanded' : 'collapsed'}`}>
+        <div className="section-header" onClick={() => toggleSection('reports')}>
+          <h3>Tactical Reports</h3>
+          <button type="button" className="toggle-btn" aria-expanded={expandedSections.reports}>
+            {expandedSections.reports ? '▼' : '▶'}
+          </button>
+        </div>
+        {expandedSections.reports && (
+          <div className="section-content">
+            <MyReports />
           </div>
         )}
       </section>

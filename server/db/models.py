@@ -15,6 +15,9 @@ class Player(db.Model):
     rightRating = db.Column(Integer, unique=False, nullable=False)
     primaryPosition = db.Column(String(3), unique=False, nullable=False)
     secondaryPosition = db.Column(String(3), unique=False, nullable=True)
+    technicalRating = db.Column(Integer, unique=False, nullable=False)
+    mentalRating = db.Column(Integer, unique=False, nullable=False)
+    physicalRating = db.Column(Integer, unique=False, nullable=False)
     available = db.Column(Boolean, unique=False, nullable=False)
     
     def __repr__(self):
@@ -97,7 +100,6 @@ def get_initial_teams():
         Team(name='Uruguay'),
         Team(name='Uzbekistan')
     ]
-
 
 def seed_initial_teams():
     if db.session.query(Team).count() == 0:

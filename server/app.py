@@ -1,12 +1,48 @@
+import os
+import sqlite3
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from db.database import db
 from db import models
 from config import SQLALCHEMY_DATABASE_URI
 
+
+def ensure_sqlite_player_columns(db_uri):
+    if not db_uri.startswith('sqlite:///'):
+        return
+
+    db_path = db_uri.replace('sqlite:///', '', 1)
+    if not os.path.exists(db_path):
+        return
+
+    connection = sqlite3.connect(db_path)
+    cursor = connection.cursor()
+    cursor.execute('PRAGMA table_info(players)')
+    existing_columns = {row[1] for row in cursor.fetchall()}
+
+    required_columns = [
+        ('technicalRating', 'INTEGER', '0'),
+        ('mentalRating', 'INTEGER', '0'),
+        ('physicalRating', 'INTEGER', '0')
+    ]
+
+    for column_name, column_type, default_value in required_columns:
+        if column_name not in existing_columns:
+            cursor.execute(
+                f'ALTER TABLE players ADD COLUMN {column_name} {column_type} NOT NULL DEFAULT {default_value}'
+            )
+            print(f"Added missing column {column_name} to players table.")
+
+    connection.commit()
+    connection.close()
+
+
 def create_app(db_uri):
     flask_app = Flask(__name__)
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+
+    ensure_sqlite_player_columns(db_uri)
+
     db.init_app(flask_app)
 
     with flask_app.app_context():
@@ -42,6 +78,9 @@ def get_player(player_id):
         "rightRating": player.rightRating,
         "primaryPosition": player.primaryPosition,
         "secondaryPosition": player.secondaryPosition,
+        "technicalRating": player.technicalRating,
+        "mentalRating": player.mentalRating,
+        "physicalRating": player.physicalRating,
         "available": player.available
     }
     
@@ -69,6 +108,9 @@ def update_player(player_id):
         player.rightRating = data.get('rightRating', player.rightRating)
         player.primaryPosition = data.get('primaryPosition', player.primaryPosition)
         player.secondaryPosition = data.get('secondaryPosition', player.secondaryPosition)
+        player.technicalRating = data.get('technicalRating', player.technicalRating)
+        player.mentalRating = data.get('mentalRating', player.mentalRating)
+        player.physicalRating = data.get('physicalRating', player.physicalRating)
         player.available = data.get('available', player.available)
 
         db.session.commit()
@@ -96,9 +138,12 @@ def create_player():
     rightRating = data.get('rightRating')
     primaryPosition = data.get('primaryPosition')
     secondaryPosition = data.get('secondaryPosition')
+    technicalRating = data.get('technicalRating')
+    mentalRating = data.get('mentalRating')
+    physicalRating = data.get('physicalRating')
     available = data.get('available')
 
-    print(f"Received: {name}, {team}, {age}, {leftRating}, {rightRating}, {primaryPosition}, {secondaryPosition}, {available}")
+    print(f"Received: {name}, {team}, {age}, {leftRating}, {rightRating}, {primaryPosition}, {secondaryPosition}, {technicalRating}, {mentalRating}, {physicalRating}, {available}")
 
     # Import the Player model
     from db.models import Player
@@ -113,6 +158,9 @@ def create_player():
             rightRating=rightRating,
             primaryPosition=primaryPosition,
             secondaryPosition=secondaryPosition,
+            technicalRating=technicalRating,
+            mentalRating=mentalRating,
+            physicalRating=physicalRating,
             available=available
         )
         
@@ -167,6 +215,9 @@ def get_players():
             "rightRating": player.rightRating,
             "primaryPosition": player.primaryPosition,
             "secondaryPosition": player.secondaryPosition,
+            "technicalRating": player.technicalRating,
+            "mentalRating": player.mentalRating,
+            "physicalRating": player.physicalRating,
             "available": player.available
         }
         player_list.append(player_info)
