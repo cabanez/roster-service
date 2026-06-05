@@ -7,6 +7,7 @@ function App() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [refreshFlag, setRefreshFlag] = useState(0);
+  const [selectedTeam, setSelectedTeam] = useState('');
   const [expandedSections, setExpandedSections] = useState({
     form: true,
     data: true
@@ -67,23 +68,25 @@ function App() {
         </div>
         {expandedSections.data && (
           <div className="section-content">
-            <MyData onEdit={handleEditPlayer} refreshFlag={refreshFlag} />
+            <MyData onEdit={handleEditPlayer} refreshFlag={refreshFlag} onTeamSelected={setSelectedTeam} />
           </div>
         )}
       </section>
-      <section id="reports" className={`collapsible-section ${expandedSections.reports ? 'expanded' : 'collapsed'}`}>
-        <div className="section-header" onClick={() => toggleSection('reports')}>
-          <h3>Tactical Reports</h3>
-          <button type="button" className="toggle-btn" aria-expanded={expandedSections.reports}>
-            {expandedSections.reports ? '▼' : '▶'}
-          </button>
-        </div>
-        {expandedSections.reports && (
-          <div className="section-content">
-            <MyReports />
+      {selectedTeam && (
+        <section id="reports" className={`collapsible-section ${expandedSections.reports ? 'expanded' : 'collapsed'}`}>
+          <div className="section-header" onClick={() => toggleSection('reports')}>
+            <h3>Tactical Reports</h3>
+            <button type="button" className="toggle-btn" aria-expanded={expandedSections.reports}>
+              {expandedSections.reports ? '▼' : '▶'}
+            </button>
           </div>
-        )}
-      </section>
+          {expandedSections.reports && (
+            <div className="section-content">
+              <MyReports selectedTeam={selectedTeam} />
+            </div>
+          )}
+        </section>
+      )}
     </>
   );
 }

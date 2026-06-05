@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const MyReports = () => {
+const MyReports = ({ selectedTeam }) => {
   const viteTacOpApiUrl = import.meta.env.VITE_TAC_OP_API_URL;
   const [reports, setReports] = useState([]);
   const [squadDepthSummary, setSquadDepthSummary] = useState(null);
@@ -9,10 +9,15 @@ const MyReports = () => {
   const [error, setError] = useState(null);
 
   const fetchSquadDepthSummary = async () => {
+    if (!selectedTeam) {
+      setSquadDepthSummary(null);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${viteTacOpApiUrl}/api/squadDepthSummary?team=13`);
+      const response = await fetch(`${viteTacOpApiUrl}/api/squadDepthSummary?team=${encodeURIComponent(selectedTeam)}`);
       if (!response.ok) {
         throw new Error('Failed to fetch squad depth summary');
       }
@@ -28,14 +33,16 @@ const MyReports = () => {
 
   useEffect(() => {
     fetchSquadDepthSummary();
-  }, []);
+  }, [selectedTeam]);
 
   const chartData = squadDepthSummary
-    ? Object.entries(squadDepthSummary.combined_depth || {}).map(([position, depths]) => ({
-        position,
-        primary: depths.primary || 0,
-        secondary: depths.secondary || 0,
-      }))
+    ? Object.entries(squadDepthSummary.combined_depth || {})
+        .map(([position, depths]) => ({
+          position,
+          primary: depths.primary || 0,
+          secondary: depths.secondary || 0,
+        }))
+        .sort((a, b) => (b.primary + b.secondary) - (a.primary + a.secondary))
     : [];
 
   return (
@@ -45,9 +52,9 @@ const MyReports = () => {
         {loading && <p>Loading squad depth summary...</p>}
         {error && <p style={{ color: 'red' }}>Error: {error}</p>}
         {squadDepthSummary && (
-          <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f5f5f5', width: '100%' }}>
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+          <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f5f5f5', width: '100%', boxSizing: 'border-box', overflow: 'hidden' }}>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={chartData} margin={{ top: 20, right: 20, left: 50, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="position" />
                 <YAxis />
