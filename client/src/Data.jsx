@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 function MyData({ onEdit, refreshFlag }) {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [players, setPlayers] = useState([]);
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState('');
@@ -8,7 +9,7 @@ function MyData({ onEdit, refreshFlag }) {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/teams');
+        const response = await fetch(`${apiUrl}/api/teams`);
         if (!response.ok) {
           console.error('Failed to fetch teams:', response.status, response.statusText);
           return;
@@ -27,7 +28,7 @@ function MyData({ onEdit, refreshFlag }) {
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        let url = 'http://localhost:5000/api/players';
+        let url = `${apiUrl}/api/players`;
         if (selectedTeam) {
           url += `?team=${encodeURIComponent(selectedTeam)}`;
         }

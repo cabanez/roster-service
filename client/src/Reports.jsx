@@ -1,31 +1,22 @@
 import { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const MyReports = () => {
+  const viteTacOpApiUrl = import.meta.env.VITE_TAC_OP_API_URL;
   const [reports, setReports] = useState([]);
   const [squadDepthSummary, setSquadDepthSummary] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // Simulate fetching reports
-    const fetchReports = async () => {
-      // Replace this with your actual API call
-      const response = await fetch('http://localhost:5000/api/reports');
-      const data = await response.json();
-      setReports(data);
-    };
-
-    fetchReports();
-  }, []);
-
   const fetchSquadDepthSummary = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:8000/api/squadDepthSummary');
+      const response = await fetch(`${viteTacOpApiUrl}/api/squadDepthSummary?team=13`);
       if (!response.ok) {
         throw new Error('Failed to fetch squad depth summary');
       }
+
       const data = await response.json();
       setSquadDepthSummary(data);
     } catch (err) {
@@ -35,34 +26,37 @@ const MyReports = () => {
     }
   };
 
+  useEffect(() => {
+    fetchSquadDepthSummary();
+  }, []);
+
+  const chartData = squadDepthSummary
+    ? Object.entries(squadDepthSummary.combined_depth || {}).map(([position, depths]) => ({
+        position,
+        primary: depths.primary || 0,
+        secondary: depths.secondary || 0,
+      }))
+    : [];
+
   return (
     <div>
-      <ul>
-        {reports.map((report) => (
-          <li key={report.id}>{report.name}: {report.value}</li>
-        ))}
-      </ul>
-
       <section style={{ marginTop: '2rem', padding: '1rem', border: '1px solid #ddd' }}>
         <h3>Squad Depth Summary</h3>
-        <button 
-          onClick={fetchSquadDepthSummary} 
-          disabled={loading}
-          style={{
-            padding: '0.5rem 1rem',
-            fontSize: '1rem',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            opacity: loading ? 0.6 : 1
-          }}
-        >
-          {loading ? 'Loading...' : 'Fetch Squad Depth Summary'}
-        </button>
-        
+        {loading && <p>Loading squad depth summary...</p>}
         {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-        
         {squadDepthSummary && (
-          <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f5f5f5' }}>
-            <pre>{JSON.stringify(squadDepthSummary, null, 2)}</pre>
+          <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f5f5f5', width: '100%' }}>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="position" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="primary" stackId="a" fill="#8884d8" name="Primary" />
+                <Bar dataKey="secondary" stackId="a" fill="#82ca9d" name="Secondary" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         )}
       </section>

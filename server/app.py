@@ -61,7 +61,7 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 def index():
     return "Welcome to the Player Input Service!"
 
-@app.route('/api/player/<int:player_id>', methods=['GET'])
+@app.route('/api/player/<int:player_id>')
 def get_player(player_id):
     from db.models import Player
     player = Player.query.get(player_id)
@@ -173,7 +173,7 @@ def create_player():
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
 
-@app.route('/api/teams', methods=['GET'])
+@app.route('/api/teams')
 def get_teams():
     from db.models import Team
     teams = Team.query.all()
@@ -187,7 +187,7 @@ def get_teams():
 
     return jsonify(team_list), 200
 
-@app.route('/api/players', methods=['GET'])
+@app.route('/api/players')
 def get_players():
     # Import the Player model
     from db.models import Player

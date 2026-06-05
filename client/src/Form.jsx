@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 function MyForm({ initialData, onSaved }) {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const [formData, setFormData] = useState({
         name: '',
         team: '',
@@ -21,7 +22,7 @@ function MyForm({ initialData, onSaved }) {
 
     useEffect(() => {
         const fetchOptions = async () => {
-            const response = await fetch('http://localhost:5000/api/teams');
+            const response = await fetch(`${apiUrl}/api/teams`);
             const data = await response.json();
             const mapped = data.map(item => ({
                 label: item.name,
@@ -39,7 +40,7 @@ function MyForm({ initialData, onSaved }) {
 
         const pendingData = {
             name: initialData.name || '',
-            team: initialData.team || '',
+            team: initialData.team != null ? String(initialData.team) : '',
             age: initialData.age || '',
             leftRating: initialData.leftRating || '',
             rightRating: initialData.rightRating || '',
@@ -84,7 +85,7 @@ function MyForm({ initialData, onSaved }) {
         if (Object.keys(newErrors).length === 0) {
             console.log('Form is valid');
             try {
-                const url = editingId ? `http://localhost:5000/api/player/${editingId}` : 'http://localhost:5000/api/player';
+                const url = editingId ? `${apiUrl}/api/player/${editingId}` : `${apiUrl}/api/player`;
                 const method = editingId ? 'PUT' : 'POST';
                 const response = await fetch(url, {
                     method,

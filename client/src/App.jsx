@@ -4,6 +4,7 @@ import MyData from './Data';
 import MyReports from './Reports';
 
 function App() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [refreshFlag, setRefreshFlag] = useState(0);
   const [expandedSections, setExpandedSections] = useState({
@@ -24,7 +25,7 @@ function App() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/player/${playerId}`);
+      const response = await fetch(`${apiUrl}/api/player/${playerId}`);
       if (!response.ok) {
         console.error('Failed to load player for edit:', response.status, response.statusText);
         return;
