@@ -111,9 +111,19 @@ def update_player(player_id):
         player.technicalRating = data.get('technicalRating', player.technicalRating)
         player.mentalRating = data.get('mentalRating', player.mentalRating)
         player.physicalRating = data.get('physicalRating', player.physicalRating)
-        player.available = data.get('available', player.available)
+
+        availability_changed = False
+        if 'available' in data:
+            new_available = data.get('available')
+            availability_changed = new_available != player.available
+            player.available = new_available
 
         db.session.commit()
+
+        if availability_changed:
+            from broker.producer import trigger_event
+            trigger_event(player.team)
+
         return jsonify({"message": f"Player {player.name} updated successfully!"}), 200
     except Exception as e:
         db.session.rollback()

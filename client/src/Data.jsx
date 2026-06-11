@@ -98,7 +98,10 @@ function MyData({ onEdit, refreshFlag, onTeamSelected }) {
           </thead>
           <tbody>
             {players.map((player) => (
-              <tr key={player.id ?? player.name}>
+              <tr
+                key={player.id ?? player.name}
+                style={player.available ? undefined : { color: 'red', textDecoration: 'line-through' }}
+              >
                 <td>
                   <button type="button" onClick={() => onEdit?.(player.id)}>
                     Edit
